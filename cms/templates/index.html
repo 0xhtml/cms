@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import 'forms.html' as forms %}
+
+{% block title %}
+Projekte
+{% endblock %}
+
+{% block content %}
+<h1>Projekte</h1>
+
+<form action="{{ url_for("create_project") }}" method="POST" id="create-project">
+    {{ forms.pathinput("project-name", "Projektname", "-", projects, form) }}
+    <input type="submit" value="Projekt erstellen">
+</form>
+
+<ul>
+    {% for project in projects %}
+    <li><a href="{{ url_for("project", path=project) }}">{{ project }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

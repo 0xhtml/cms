@@ -1,0 +1,41 @@
+{% extends "project_base.html" %}
+{% import 'forms.html' as forms %}
+
+{% block content %}
+{{ super() }}
+
+<form action="{{ url_for("update_item", path=path) }}" method="POST">
+    <input type="hidden" name="content_hash" value="{{ content_hash }}">
+    <p>
+        Vorlage:
+        <select name="template">
+            <option value="" {% if template == "" %}selected{% endif %}>Keine</option>
+            {% for atemplate in templates %}
+            <option value="{{ atemplate }}" {% if template == atemplate %}selected{% endif %}>{{ atemplate }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" id="update" value="Aktualisieren">
+    </p>
+    {% for name, field in fields.items() %}
+    <p>
+        {{ name }}{% if not field.active %} (Nicht in Vorlage){% endif %}<br>
+        {{ forms.textarea(field.name_prefix ~ name, field.placeholder, field.value) }}
+    </p>
+    {% endfor %}
+    <p><input type="submit" id="save" value="Speichern"></p>
+
+    <script>
+        const update = document.getElementById("update");
+        const template = document.getElementsByName("template")[0];
+
+        function show_update() {
+            const hidden = template.value == {{ template | tojson }};
+            update.hidden = hidden;
+        }
+
+        show_update();
+        template.addEventListener("input", show_update);
+    </script>
+</form>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% macro pathinput(name, placeholder, chars, taken, form) %}
+{% set value = form[name] if form else "" %}
+<input type="text" name="{{ name }}" placeholder="{{ placeholder }}" pattern="[A-Za-z0-9{{ chars }}]*" required value="{{ value }}">
+<script>
+    document.getElementsByName("{{ name }}")[0].addEventListener("input", e => {
+        if (e.target.validity.valueMissing) {
+            e.target.setCustomValidity("Bitte gebe einen {{ placeholder }} an.");
+            e.target.reportValidity();
+        } else if (e.target.validity.patternMismatch) {
+            e.target.setCustomValidity("Der {{ placeholder }} darf nur aus Buchstaben (keine Umlaute), Zahlen und {{ chars }} bestehen.");
+            e.target.reportValidity();
+        } else if ({{ taken | tojson }}.includes(e.target.value)) {
+            e.target.setCustomValidity("Der {{ placeholder }} existiert bereits.");
+            e.target.reportValidity();
+        } else {
+            e.target.setCustomValidity("");
+        }
+    });
+</script>
+{% endmacro %}
+
+{% macro textarea(name, placeholder, value) %}
+<textarea name="{{ name }}" cols="80" rows="{{ (value or placeholder).split("\n") | length }}" placeholder="{{ placeholder }}">{{ value }}</textarea>
+<script>
+    document.getElementsByName("{{ name }}")[0].addEventListener("input", e => {
+        e.target.rows = (e.target.value || e.target.placeholder).split("\n").length;
+    });
+</script>
+{% endmacro %}

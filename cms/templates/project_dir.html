@@ -1,0 +1,20 @@
+{% extends "project_base.html" %}
+{% import 'forms.html' as forms %}
+
+{% block content %}
+{{ super() }}
+
+<form action="{{ url_for("create_item", path=path) }}" method="POST">
+    {{ forms.pathinput("item", "Dateiname", "-.", [], form) }}
+    <input type="submit" value="Datei erstellen">
+</form>
+
+<ul>
+    {% for item in tree recursive %}
+    <li>{{ item.icon }} <a href="{{ url_for("project", path=item.path) }}">{{ item.name }}</a>{{ item.suffix }}</li>
+    {% if item.children %}
+    <ul>{{ loop(item.children) }}</ul>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

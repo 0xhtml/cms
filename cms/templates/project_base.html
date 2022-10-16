@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ path }}
+{% endblock %}
+
+{% block content %}
+<h1>
+    {% for part in path.split("/") %}
+    {% if loop.last %}
+    {{ part }}
+    {% else %}
+    <a href="{{ url_for("project", path="/".join(path.split("/")[:loop.index])) }}">{{ part }}</a> /
+    {% endif %}
+    {% endfor %}
+</h1>
+
+{% if msg %}
+<p style="background: red">{{ msg }}</p>
+{% endif %}
+{% endblock %}

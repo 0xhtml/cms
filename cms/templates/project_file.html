@@ -1,0 +1,12 @@
+{% extends "project_base.html" %}
+{% import 'forms.html' as forms %}
+
+{% block content %}
+{{ super() }}
+
+<form action="{{ url_for("update_item", path=path) }}" method="POST">
+    <input type="hidden" name="content_hash" value="{{ content_hash }}">
+    <p>{{ forms.textarea("content", "", content) }}</p>
+    <p><input type="submit" value="Speichern"></p>
+</form>
+{% endblock %}
